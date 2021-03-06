@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useRef } from 'react';
+import { FaUndo, FaRedo, FaRegTrashAlt } from 'react-icons/fa';
+import {
+  usePageTitle,
+  useUndo,
+  usePersistentState,
+  useFocusElement,
+} from './hooks';
 
 function App() {
+  const [message, setMessage, onUndo, onRedo] = useUndo(
+    usePersistentState('txt', '')
+  );
+  const messageRef = useRef(null);
+
+  usePageTitle('Hooks Helpers');
+
+  useFocusElement(messageRef, true);
+
+  const onChange = (e) => setMessage(e.target.value);
+  const onClear = () => setMessage('');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <textarea ref={messageRef} onChange={onChange} value={message} />
+      <button onClick={onUndo}>
+        <FaUndo />
+      </button>
+      <button onClick={onRedo}>
+        <FaRedo />
+      </button>
+      <button onClick={onClear}>
+        <FaRegTrashAlt />
+      </button>
     </div>
   );
 }
